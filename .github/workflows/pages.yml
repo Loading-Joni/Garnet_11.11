@@ -30,11 +30,17 @@ jobs:
         with:
           enablement: true
 
+      - name: Refresh Yandex reviews
+        continue-on-error: true
+        run: |
+          python3 tools/fetch_reviews.py reviews.json || echo "Отзывы не обновились, останется встроенная копия"
+
       - name: Collect site
         run: |
           mkdir -p _site
           cp index.html thanks.html thanks-anush.html robots.txt favicon.ico CNAME _site/
           cp all-on-4.html implants.html veneers.html _site/
+          cp reviews.json _site/ 2>/dev/null || true
           cp -r certs _site/
 
       - name: Upload artifact
