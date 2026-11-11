@@ -34,6 +34,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html thanks.html robots.txt favicon.ico CNAME _site/
+          cp all-on-4.html implants.html veneers.html _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
