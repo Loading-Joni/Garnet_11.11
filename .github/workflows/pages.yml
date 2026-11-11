@@ -42,6 +42,7 @@ jobs:
           cp all-on-4.html implants.html veneers.html _site/
           cp reviews.json _site/ 2>/dev/null || true
           cp -r certs _site/
+          cp -r assets _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
