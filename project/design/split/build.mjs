@@ -31,6 +31,11 @@ const PAGES = [
 // Каркас: порядок блоков одинаковый для всех трёх страниц.
 function shell(page) {
   const c = (n) => content(page.dir, n);
+  // Файл направления важнее общего каркаса: своего файла нет — берём fallback.
+  const cIf = (n, fallback = '') => {
+    const p = path.join(ROOT, 'content', page.dir, n);
+    return fs.existsSync(p) ? read(p) : fallback;
+  };
   return [
     shared('head.html'),
     shared('top.html'),
@@ -39,17 +44,18 @@ function shell(page) {
     c('hero.html'),
     c('fears.html'),
     c('calc.html'),
+    cIf('works.html'),
     c('steps.html'),
     shared('scan-section.html'),
     c('gallery.html'),
     c('brands.html'),
     c('services.html'),
     c('pink.html'),
-    shared('doctors.html'),
+    cIf('doctors.html', shared('doctors.html')),
     shared('trust.html'),
-    c('prices.html'),
+    cIf('prices.html'),
     c('faq.html'),
-    shared('contacts.html'),
+    cIf('contacts.html', shared('contacts.html')),
     '</main>',
     shared('footer.html'),
     '</body>',

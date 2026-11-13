@@ -1,13 +1,27 @@
 <section class="hero"><div class="wrap"><div class="hero-grid">
 <div class="hero-copy">
+<div class="hero-stamp hero-stamp--copy" role="img" aria-label="Рассрочка 0% на лечение">
+<svg viewBox="0 0 120 120">
+<circle cx="60" cy="60" r="57" fill="#fff"/>
+<circle cx="60" cy="60" r="57" fill="none" stroke="#C7004F" stroke-width="2"/>
+<circle cx="60" cy="60" r="51" fill="none" stroke="#C7004F" stroke-width="1" stroke-dasharray="3 3.2"/>
+<defs><path id="stampArc" d="M 20 60 A 40 40 0 0 1 100 60"/></defs>
+<text font-family="Montserrat,Arial,sans-serif" font-size="8.6" font-weight="600" letter-spacing="2.6" fill="#C7004F"><textPath href="#stampArc" startOffset="50%" text-anchor="middle">РАССРОЧКА</textPath></text>
+<text x="60" y="66" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-size="31" font-weight="700" fill="#C7004F">0%</text>
+<text x="60" y="86" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-size="8.4" font-weight="600" letter-spacing="1.4" fill="#C7004F">НА ЛЕЧЕНИЕ</text>
+</svg>
+</div>
 <p class="eyebrow">Стоматология «Гарнет» · Краснодар</p>
-<h1>Виниры в Краснодаре:<br><span>цена по прайсу<br>до визита в клинику</span></h1>
-<p class="lead">Тонкая реставрация видимой поверхности зуба. Считаем по количеству зубов и сразу показываем, что потребуется помимо самих виниров.</p>
+<h1>Виниров за 12 000 ₽<br>не бывает<br><span>Настоящая цена — в прайсе</span></h1>
+<p class="lead">Посчитаем сумму под ваше количество зубов и покажем её до визита, чтобы вы планировали бюджет дома.</p>
 <a class="btn" href="#calculator">Рассчитать стоимость виниров <span>↗</span></a>
-<span class="hint">Оттенок и форма — с врачом на консультации</span>
+<div class="ask-wrap">
+<button class="btn-ask" type="button" id="ask-open">Задать вопрос главному врачу <span aria-hidden="true">↗</span></button>
+</div>
+<span class="ask-note"><b>Мкоян Ануш Юриковна</b>, главный врач. Перезвонит в течение часа в рабочее время.</span>
 </div>
 <div class="hero-visual photo">
-<img src="/static/landing/hero-camera.jpg" alt="Врач клиники «Гарнет» с интраоральной камерой в руках">
+<img src="/static/landing/hero-veneers.jpg" alt="Винир поднесён пинцетом к обточенному фронтальному зубу">
 </div>
 </div>
 <div class="hero-bottom">
@@ -28,3 +42,57 @@
 </div>
 </div>
 </div></section>
+<div class="ask-modal" id="ask-modal" aria-hidden="true">
+<div class="ask-backdrop" data-ask-close></div>
+<div class="ask-dialog" role="dialog" aria-modal="true" aria-labelledby="ask-title">
+<button class="ask-close" type="button" data-ask-close aria-label="Закрыть">×</button>
+<p class="eyebrow">Главный врач клиники</p>
+<h3 id="ask-title">Задать вопрос Ануш Юриковне</h3>
+<p class="ask-sub">Перезвонит в течение часа в рабочее время: Пн–Пт 9:00–20:00, Сб–Вс 10:00–20:00.</p>
+<form id="ask-form" novalidate>
+<label><input class="input" name="name" aria-label="Ваше имя" placeholder="Как к вам обращаться" required></label>
+<label><input class="input" name="phone" aria-label="Номер телефона" type="tel" inputmode="tel" autocomplete="tel" data-phone placeholder="+7 (___) ___-__-__" required></label>
+<label><textarea class="input" name="concern" aria-label="Что беспокоит" placeholder="Что беспокоит" rows="3" required></textarea></label>
+<label class="consent"><input type="checkbox" name="consent" value="yes" required><span>Даю согласие на обработку персональных данных и ознакомлен(а) с политикой конфиденциальности.</span></label>
+<button class="btn" type="submit" id="ask-submit">Отправить вопрос ↗</button>
+<div id="ask-feedback" role="status" aria-live="polite"></div>
+</form>
+</div>
+</div>
+<script>
+(function () {
+ var modal = document.getElementById('ask-modal'), openBtn = document.getElementById('ask-open');
+ if (!modal || !openBtn) return;
+ function open() {
+  modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('ask-lock');
+  var f = modal.querySelector('input[name=name]'); if (f) setTimeout(function () { f.focus(); }, 50);
+ }
+ function close() { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('ask-lock'); }
+ openBtn.addEventListener('click', open);
+ modal.addEventListener('click', function (e) { if (e.target.closest('[data-ask-close]')) close(); });
+ document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+ var ENDPOINT = 'https://formsubmit.co/ajax/garnetgithub@gmail.com';
+ var form = document.getElementById('ask-form'), btn = document.getElementById('ask-submit'), out = document.getElementById('ask-feedback');
+ form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  var name = form.querySelector('input[name=name]'), phone = form.querySelector('input[data-phone]'), concern = form.querySelector('textarea[name=concern]'), consent = form.querySelector('input[type=checkbox]');
+  var digits = (phone.value || '').replace(/\D/g,'');
+  if (!name.value.trim()) { out.innerHTML = '<p>Напишите, как к вам обращаться.</p>'; name.focus(); return; }
+  if (digits.length !== 11 || (digits[0] !== '7' && digits[0] !== '8')) { out.innerHTML = '<p>Проверьте номер телефона: нужен российский номер из 11 цифр.</p>'; phone.focus(); return; }
+  if (!concern.value.trim()) { out.innerHTML = '<p>Опишите, что беспокоит.</p>'; concern.focus(); return; }
+  if (!consent.checked) { out.innerHTML = '<p>Для отправки нужно согласие на обработку персональных данных.</p>'; return; }
+  var p = new URLSearchParams();
+  p.append('name', name.value.trim());
+  p.append('phone', phone.value.trim());
+  p.append('concern', concern.value.trim());
+  p.append('consent', 'yes');
+  p.append('_subject', 'Вопрос главному врачу — Виниры');
+  p.append('_template', 'table');
+  btn.disabled = true; out.innerHTML = '<p>Отправляем вопрос…</p>';
+  fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' }, body: p.toString() })
+   .then(function (r) { return r.json().catch(function () { return { success: 'false' }; }); })
+   .then(function (d) { if (String(d.success) === 'true') { location.href = 'thanks-anush.html'; return; } throw new Error('fail'); })
+   .catch(function () { btn.disabled = false; out.innerHTML = '<p>Не отправилось. Позвоните <a href="tel:+79182227336">+7 918 222-73-36</a>.</p>'; });
+ });
+})();
+</script>

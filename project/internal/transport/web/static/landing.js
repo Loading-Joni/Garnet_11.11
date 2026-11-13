@@ -15,22 +15,37 @@
    count = selected && selected.textContent.includes('Обе') ? 2 : 1;
    const material = panel.querySelector('.material.picked');
    const name = material.querySelector('strong').textContent;
-   const price = Number(material.querySelector('b').textContent.replace(/\D/g,''));
-   amount = count * price;
+   const price = Number(material.querySelector('b').textContent.replace(/\D/g,'')) || 0;
+   const unit = material.dataset.unit ? Number(material.dataset.unit) : count;
+   amount = unit * price;
    lines = line(selected.textContent, count+' '+(count === 2 ? 'челюсти' : 'челюсть')) + line(name, money(amount));
-   items.push(count+' × '+name+' — '+money(price)+' за челюсть');
+   items.push(unit+' × '+name+' — '+money(price)+(material.dataset.unit ? ' за единицу' : ' за челюсть'));
    const temporary = Array.from(panel.querySelectorAll('.material')).indexOf(material) < 2;
    result.querySelector('.not-package').textContent = 'Это стоимость выбранного протеза. Не стоимость All-on-4 под ключ.';
    result.querySelector('.excluded ul').innerHTML = '<li>Имплантаты и их установка</li><li>Абатменты и дополнительные компоненты</li><li>'+(temporary ? 'Постоянный протез' : 'Временный протез')+'</li><li>Диагностика, удаление и подготовка тканей</li><li>Другие услуги, назначенные врачом</li>';
   } else if (panel.classList.contains('implant-panel')) {
    panel.querySelectorAll('.material.picked').forEach(material => {
     const name = material.querySelector('strong').textContent;
-    const price = Number(material.querySelector('b').textContent.replace(/\D/g,''));
-    if (!unknown) { amount += count * price; lines += line(count+' × '+name, money(count * price)); items.push(count+' × '+name+' — '+money(price)+' за единицу'); }
+    const price = Number(material.querySelector('b').textContent.replace(/\D/g,'')) || 0;
+    const unit = material.dataset.unit ? Number(material.dataset.unit) : count;
+    if (!unknown) { amount += unit * price; lines += line(unit+' × '+name, money(unit * price)); items.push(unit+' × '+name+' — '+money(price)+' за единицу'); }
    });
    result.querySelector('h3').textContent = unknown ? 'Количество уточнит врач' : 'Восстановление: '+selected.textContent;
   } else {
-   if (!unknown) { amount = count * 23100; lines = line(count+' виниров × '+money(23100), money(amount)); items.push(count+' виниров по позиции ОРТ-38'); }
+   const price = m => Number(m.querySelector('b').textContent.replace(/\D/g,'')) || 0;
+   const name = m => m.querySelector('strong').textContent;
+   const unitOf = m => m.dataset.unit === 'tooth' ? count : 1;
+   const main = panel.querySelector('.materials.main .material.picked');
+   if (!unknown && main) {
+    amount = count * price(main);
+    items.push(count+' × '+name(main)+' — '+money(price(main))+' за единицу');
+   }
+   if (!unknown) panel.querySelectorAll('.materials.multi .material.picked').forEach(m => {
+    const q = unitOf(m) * price(m);
+    amount += q;
+    lines += line(name(m)+(unitOf(m) > 1 ? ' × '+unitOf(m) : ''), money(q));
+    items.push(name(m)+' — '+money(q)+(unitOf(m) > 1 ? ' ('+unitOf(m)+' × '+money(price(m))+')' : ''));
+   });
   }
   result.querySelectorAll('.result-line').forEach(el => el.remove());
   result.querySelector('hr').insertAdjacentHTML('beforebegin', lines);
@@ -41,6 +56,9 @@
  }
  function selectMaterial(el) {
   const panel = el.closest('.calc-panel');
+  if (el.parentElement.classList.contains('multi')) {
+   el.classList.toggle('picked'); el.setAttribute('aria-pressed', String(el.classList.contains('picked'))); update(panel); return;
+  }
   const group = panel.classList.contains('all-panel') ? panel : el.parentElement;
   group.querySelectorAll('.material').forEach(x => { x.classList.remove('picked'); x.setAttribute('aria-pressed','false'); });
   el.classList.add('picked'); el.setAttribute('aria-pressed','true'); update(panel);
