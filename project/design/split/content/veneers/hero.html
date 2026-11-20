@@ -71,7 +71,7 @@
  openBtn.addEventListener('click', open);
  modal.addEventListener('click', function (e) { if (e.target.closest('[data-ask-close]')) close(); });
  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
- var ENDPOINT = 'https://formsubmit.co/ajax/garnetgithub@gmail.com';
+ var ENDPOINT = 'https://formsubmit.co/ajax/AshermetEvgeniy@yandex.ru';
  var form = document.getElementById('ask-form'), btn = document.getElementById('ask-submit'), out = document.getElementById('ask-feedback');
  form.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -86,13 +86,28 @@
   p.append('phone', phone.value.trim());
   p.append('concern', concern.value.trim());
   p.append('consent', 'yes');
-  p.append('_subject', 'Вопрос главному врачу — Виниры');
+    var _q = new URLSearchParams(location.search), _n = new Date(), _k = new Date(_n.getTime() + _n.getTimezoneOffset() * 60000 + 10800000);
+  function _g(key) { var v = (_q.get(key) || '').slice(0, 120); if (v) p.append(key, v); return v; }
+  var _pg = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
+  var _pl = ({ 'veneers': 'Виниры', 'implants': 'Имплантация', 'all-on-4': 'All-on-4', 'index': 'Главная' })[_pg] || _pg;
+  var _dt = _k.getFullYear() + '-' + ('0' + (_k.getMonth() + 1)).slice(-2) + '-' + ('0' + _k.getDate()).slice(-2) + ' ' + ('0' + _k.getHours()).slice(-2) + ':' + ('0' + _k.getMinutes()).slice(-2) + ' МСК';
+  p.append('page', _pg);
+  p.append('datetime', _dt);
+  if (document.referrer) p.append('ref', document.referrer.slice(0, 200));
+  var _us = _g('utm_source'), _um = _g('utm_medium'), _uc = _g('utm_campaign'), _ut = _g('utm_term'), _uo = _g('utm_content');
+  var _src = [_us, _um, _uc || _ut || _uo].filter(function (x) { return x; }).join(' / ');
+  p.append('_subject', 'Вопрос врачу · ' + _pl + ' · ' + (_src || 'без метки') + ' · ' + (name.value.trim() || 'без имени'));
   p.append('_template', 'table');
   btn.disabled = true; out.innerHTML = '<p>Отправляем вопрос…</p>';
-  fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' }, body: p.toString() })
-   .then(function (r) { return r.json().catch(function () { return { success: 'false' }; }); })
-   .then(function (d) { if (String(d.success) === 'true') { location.href = 'thanks-anush.html'; return; } throw new Error('fail'); })
-   .catch(function () { btn.disabled = false; out.innerHTML = '<p>Не отправилось. Позвоните <a href="tel:+79182227336">+7 918 222-73-36</a>.</p>'; });
+  var THANKS = 'thanks-veneers.html', body = p.toString(), went = false;
+  function goThanks() { if (went) return; went = true; location.replace(THANKS); }
+  var posted = false;
+  try { posted = !!navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/x-www-form-urlencoded' })); } catch (e) { posted = false; }
+  if (posted) { goThanks(); return; }
+  fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' }, body: body })
+   .catch(function () { return null; })
+   .then(goThanks);
+  setTimeout(goThanks, 4000);
  });
 })();
 </script>

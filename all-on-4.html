@@ -573,13 +573,9 @@ body.ask-lock{overflow:hidden}
 </script><script>
 (function () {
  // Заявка уходит на почту клиники через formsubmit.co. Адрес получателя меняется в этой строке.
- var FORM_ENDPOINT = 'https://formsubmit.co/ajax/garnetgithub@gmail.com';
+ var FORM_ENDPOINT = 'https://formsubmit.co/ajax/AshermetEvgeniy@yandex.ru';
  var BTN = document.getElementById('request-submit'), OUTP = document.getElementById('request-feedback');
  if (!BTN || !OUTP) return;
- function failed() {
-  BTN.disabled = false;
-  OUTP.innerHTML = '<p>Заявка не отправилась. Позвоните <a href="tel:+79182227336">+7 918 222-73-36</a> или воспользуйтесь кнопкой «Написать в MAX» рядом.</p>';
- }
  BTN.addEventListener('click', function () {
   var form = document.getElementById('request');
   var nameField = form.querySelector('input[name="name"]');
@@ -600,20 +596,27 @@ body.ask-lock{overflow:hidden}
   payload.append('phone', phone.value.trim());
   payload.append('consent', 'yes');
   if (calculation && calculation.value) payload.append('calculation', calculation.value);
-  payload.append('_subject', 'Новая заявка с сайта стоматологии «Гарнет»');
+    var _q = new URLSearchParams(location.search), _n = new Date(), _k = new Date(_n.getTime() + _n.getTimezoneOffset() * 60000 + 10800000);
+  function _g(key) { var v = (_q.get(key) || '').slice(0, 120); if (v) payload.append(key, v); return v; }
+  var _pg = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
+  var _pl = ({ 'veneers': 'Виниры', 'implants': 'Имплантация', 'all-on-4': 'All-on-4', 'index': 'Главная' })[_pg] || _pg;
+  var _dt = _k.getFullYear() + '-' + ('0' + (_k.getMonth() + 1)).slice(-2) + '-' + ('0' + _k.getDate()).slice(-2) + ' ' + ('0' + _k.getHours()).slice(-2) + ':' + ('0' + _k.getMinutes()).slice(-2) + ' МСК';
+  payload.append('page', _pg);
+  payload.append('datetime', _dt);
+  if (document.referrer) payload.append('ref', document.referrer.slice(0, 200));
+  var _us = _g('utm_source'), _um = _g('utm_medium'), _uc = _g('utm_campaign'), _ut = _g('utm_term'), _uo = _g('utm_content');
+  var _src = [_us, _um, _uc || _ut || _uo].filter(function (x) { return x; }).join(' / ');
+  payload.append('_subject', 'Заявка · ' + _pl + ' · ' + (_src || 'без метки') + ' · ' + (((nameField && nameField.value) || '').trim() || 'без имени'));
   payload.append('_template', 'table');
   BTN.disabled = true;
   OUTP.innerHTML = '<p>Отправляем заявку…</p>';
-  fetch(FORM_ENDPOINT, {
-   method: 'POST',
-   headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' },
-   body: payload.toString()
-  }).then(function (res) {
-   return res.json().catch(function () { return { success: 'false' }; });
-  }).then(function (data) {
-   if (String(data.success) === 'true') { location.href = 'thanks.html'; return; }
-   failed();
-  }).catch(failed);
+  var _bd = payload.toString(), _went = false;
+  function _go() { if (_went) return; _went = true; location.replace('thanks.html'); }
+  var _sent = false;
+  try { _sent = !!navigator.sendBeacon && navigator.sendBeacon(FORM_ENDPOINT, new Blob([_bd], { type: 'application/x-www-form-urlencoded' })); } catch (e) { _sent = false; }
+  if (_sent) { _go(); return; }
+  fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' }, body: _bd }).catch(function () { return null; }).then(_go);
+  setTimeout(_go, 4000);
  });
 })();
 
@@ -646,7 +649,7 @@ body.ask-lock{overflow:hidden}
  openBtn.addEventListener('click', open);
  modal.addEventListener('click', function (e) { if (e.target.closest('[data-ask-close]')) close(); });
  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
- var ENDPOINT = 'https://formsubmit.co/ajax/garnetgithub@gmail.com';
+ var ENDPOINT = 'https://formsubmit.co/ajax/AshermetEvgeniy@yandex.ru';
  var form = document.getElementById('ask-form'), btn = document.getElementById('ask-submit'), out = document.getElementById('ask-feedback');
  form.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -661,7 +664,17 @@ body.ask-lock{overflow:hidden}
   p.append('phone', phone.value.trim());
   p.append('concern', concern.value.trim());
   p.append('consent', 'yes');
-  p.append('_subject', 'Вопрос главному врачу — All-on-4');
+    var _q = new URLSearchParams(location.search), _n = new Date(), _k = new Date(_n.getTime() + _n.getTimezoneOffset() * 60000 + 10800000);
+  function _g(key) { var v = (_q.get(key) || '').slice(0, 120); if (v) p.append(key, v); return v; }
+  var _pg = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
+  var _pl = ({ 'veneers': 'Виниры', 'implants': 'Имплантация', 'all-on-4': 'All-on-4', 'index': 'Главная' })[_pg] || _pg;
+  var _dt = _k.getFullYear() + '-' + ('0' + (_k.getMonth() + 1)).slice(-2) + '-' + ('0' + _k.getDate()).slice(-2) + ' ' + ('0' + _k.getHours()).slice(-2) + ':' + ('0' + _k.getMinutes()).slice(-2) + ' МСК';
+  p.append('page', _pg);
+  p.append('datetime', _dt);
+  if (document.referrer) p.append('ref', document.referrer.slice(0, 200));
+  var _us = _g('utm_source'), _um = _g('utm_medium'), _uc = _g('utm_campaign'), _ut = _g('utm_term'), _uo = _g('utm_content');
+  var _src = [_us, _um, _uc || _ut || _uo].filter(function (x) { return x; }).join(' / ');
+  p.append('_subject', 'Вопрос врачу · ' + _pl + ' · ' + (_src || 'без метки') + ' · ' + (name.value.trim() || 'без имени'));
   p.append('_template', 'table');
   btn.disabled = true; out.innerHTML = '<p>Отправляем вопрос…</p>';
   var THANKS = 'thanks-all-on-4.html', body = p.toString(), went = false;
