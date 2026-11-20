@@ -40,6 +40,7 @@ jobs:
           mkdir -p _site
           cp index.html thanks.html thanks-anush.html robots.txt favicon.ico CNAME _site/
           cp all-on-4.html implants.html veneers.html _site/
+          cp thanks-all-on-4.html thanks-implants.html thanks-veneers.html _site/
           cp reviews.json _site/ 2>/dev/null || true
           cp -r certs _site/
           cp -r assets _site/
