@@ -697,7 +697,7 @@ body.ask-lock{overflow:hidden}
   BTN.disabled = true;
   OUTP.innerHTML = '<p>Отправляем заявку…</p>';
   var _bd = payload.toString(), _went = false;
-  function _go() { if (_went) return; _went = true; location.replace('thanks.html'); }
+  function _go() { if (_went) return; _went = true; location.replace('thanks.html?from=veneers'); }
   var _sent = false;
   try { _sent = !!navigator.sendBeacon && navigator.sendBeacon(FORM_ENDPOINT, new Blob([_bd], { type: 'application/x-www-form-urlencoded' })); } catch (e) { _sent = false; }
   if (_sent) { _go(); return; }
